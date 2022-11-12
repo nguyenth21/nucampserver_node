@@ -3,8 +3,6 @@ const Partner = require("../models/partner");
 
 const partnerRouter = express.Router();
 
-// test
-
 partnerRouter
   .route("/")
   .get((req, res, next) => {
