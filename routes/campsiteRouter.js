@@ -1,6 +1,7 @@
 const express = require("express");
 const Campsite = require("../models/campsite");
 const authenticate = require("../authenticate");
+const { populate } = require("../models/campsite");
 
 const campsiteRouter = express.Router();
 
@@ -115,14 +116,11 @@ campsiteRouter
         if (campsite) {
           req.body.author = req.user._id;
           campsite.comments.push(req.body);
-          campsite
-            .save()
-            .then((campsite) => {
-              res.statusCode = 200;
-              res.setHeader("Content-Type", "application/json");
-              res.json(campsite);
-            })
-            .catch((err) => next(err));
+          campsite.save().then((campsite) => {
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(campsite);
+          });
         } else {
           err = new Error(`Campsite ${req.params.campsiteId} not found`);
           err.status = 404;
@@ -147,14 +145,11 @@ campsiteRouter
             for (let i = campsite.comments.length - 1; i >= 0; i--) {
               campsite.comments.id(campsite.comments[i]._id).remove();
             }
-            campsite
-              .save()
-              .then((campsite) => {
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.json(campsite);
-              })
-              .catch((err) => next(err));
+            campsite.save().then((campsite) => {
+              res.status = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.json(campsite).catch((err) => next(err));
+            });
           } else {
             err = new Error(`Campsite ${req.params.campsiteId} not found`);
             err.status = 404;
